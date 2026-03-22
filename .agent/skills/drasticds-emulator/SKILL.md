@@ -51,6 +51,10 @@ triggers:
 | Firebase storage bucket | `drasticds-emulator.firebasestorage.app` |
 | Google services Gradle plugin | `com.google.gms.google-services` version `4.4.4` |
 | Firebase BoM version | `34.11.0` |
+| AdMob App ID | `ca-app-pub-9926768497269901~4115767842` |
+| AdMob Banner ID | `ca-app-pub-9926768497269901/6047229366` |
+| AdMob Interstitial ID | `ca-app-pub-9926768497269901/4734147693` |
+| AdMob App Open ID | `ca-app-pub-9926768497269901/3225624901` |
 
 ---
 
