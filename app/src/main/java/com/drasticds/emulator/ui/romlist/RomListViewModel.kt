@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import com.drasticds.emulator.domain.repositories.UserPreferencesRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.drasticds.emulator.common.DirectoryAccessValidator
@@ -36,7 +39,17 @@ class RomListViewModel @Inject constructor(
     private val romIconProvider: RomIconProvider,
     private val uriPermissionManager: UriPermissionManager,
     private val directoryAccessValidator: DirectoryAccessValidator,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
+
+    val isGridView = userPreferencesRepository.isGridView
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    fun toggleGridView(isGrid: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setGridView(isGrid)
+        }
+    }
 
     private val _searchQuery = MutableStateFlow("")
     private val _sortingMode = MutableStateFlow(settingsRepository.getRomSortingMode())

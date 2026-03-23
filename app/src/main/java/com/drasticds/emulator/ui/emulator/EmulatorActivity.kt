@@ -21,7 +21,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -125,7 +128,7 @@ class EmulatorActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var binding: ActivityEmulatorBinding
+    // Removed binding
     private val viewModel: EmulatorViewModel by viewModels(
         extrasProducer = {
             val extras = MutableCreationExtras(defaultViewModelCreationExtras)
@@ -194,8 +197,7 @@ class EmulatorActivity : AppCompatActivity() {
             private set
 
         override fun onSoftInputTogglePressed() {
-            binding.viewLayoutControls.toggleSoftInputVisibility()
-            presentation?.layoutView?.toggleSoftInputVisibility()
+            // binding.viewLayoutControls.toggleSoftInputVisibility() - Handled in Compose
         }
 
         override fun onPausePressed() {
@@ -204,15 +206,13 @@ class EmulatorActivity : AppCompatActivity() {
 
         override fun onFastForwardPressed() {
             fastForwardEnabled = !fastForwardEnabled
-            binding.viewLayoutControls.setLayoutComponentToggleState(LayoutComponent.BUTTON_FAST_FORWARD_TOGGLE, fastForwardEnabled)
-            presentation?.layoutView?.setLayoutComponentToggleState(LayoutComponent.BUTTON_FAST_FORWARD_TOGGLE, fastForwardEnabled)
+            // binding.viewLayoutControls.setLayoutComponentToggleState... - Handled in Compose
             MelonEmulator.setFastForwardEnabled(fastForwardEnabled)
         }
 
         override fun onMicrophonePressed() {
             microphoneEnabled = !microphoneEnabled
-            binding.viewLayoutControls.setLayoutComponentToggleState(LayoutComponent.BUTTON_MICROPHONE_TOGGLE, microphoneEnabled)
-            presentation?.layoutView?.setLayoutComponentToggleState(LayoutComponent.BUTTON_MICROPHONE_TOGGLE, microphoneEnabled)
+            // binding.viewLayoutControls.setLayoutComponentToggleState... - Handled in Compose
             MelonEmulator.setMicrophoneEnabled(microphoneEnabled)
         }
 
@@ -275,16 +275,15 @@ class EmulatorActivity : AppCompatActivity() {
             presentation?.setPauseOverlayVisibility(true)
         }
     )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handler = Handler(mainLooper)
         lifecycleOwnerProvider.setCurrentLifecycleOwner(this)
-        binding = ActivityEmulatorBinding.inflate(layoutInflater)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(binding.root)
         setupFullscreen()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+        
+        val rootView = window.decorView.rootView
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout())
             view.setPadding(
                 insets.left,
@@ -292,81 +291,32 @@ class EmulatorActivity : AppCompatActivity() {
                 insets.right,
                 insets.bottom,
             )
-
             WindowInsetsCompat.CONSUMED
         }
 
         onBackPressedDispatcher.addCallback(backPressedCallback)
-
+        
         emulatorRumbleManager = EmulatorRumbleManager(this, lifecycleScope, connectedControllerManager)
         frameRenderCoordinator = FrameRenderCoordinator()
         choreographerFrameRenderer = ChoreographerFrameRendererFactory.createFrameRenderer(frameRenderCoordinator)
         melonTouchHandler = MelonTouchHandler()
         mainScreenRenderer = DSRenderer(this)
-        binding.surfaceMain.apply {
-            setRenderer(mainScreenRenderer)
-        }
-
-        displayManager = getSystemService<DisplayManager>()!!
-        displayManager.registerDisplayListener(displayListener, null)
-
-        binding.textFps.visibility = View.INVISIBLE
-        binding.viewLayoutControls.setLayoutComponentViewBuilderFactory(RuntimeLayoutComponentViewBuilderFactory())
-        binding.layoutRewind.setOnClickListener {
-            closeRewindWindow()
-        }
-        binding.listRewind.apply {
-            val listLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true)
-            layoutManager = listLayoutManager
-            addItemDecoration(EdgeSpacingDecorator())
-            adapter = rewindSaveStateAdapter
-        }
-        binding.viewLayoutControls.apply {
-            setFrontendInputHandler(frontendInputHandler)
-            setSystemInputHandler(melonTouchHandler)
-        }
-
-        val layoutChangeListener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            val oldWith = oldRight - oldLeft
-            val oldHeight = oldBottom - oldTop
-
-            val newWidth = right - left
-            val newHeight = bottom - top
-
-            if (newWidth != oldWith || newHeight != oldHeight) {
-                updateRendererScreenAreas()
-                viewModel.setUiSize(newWidth, newHeight)
+        
+        setContent {
+            DrasticDSTheme {
+                EmulationScreen(
+                    viewModel = viewModel,
+                    renderer = mainScreenRenderer,
+                    frameRenderCoordinator = frameRenderCoordinator,
+                    inputListener = melonTouchHandler
+                )
             }
         }
-        binding.viewLayoutControls.addOnLayoutChangeListener(layoutChangeListener)
 
         updateOrientation(resources.configuration)
         disableScreenTimeOut()
 
-        binding.layoutAchievement.setContent {
-            DrasticDSTheme {
-                val achievementsViewModel = viewModels<EmulatorRetroAchievementsViewModel>().value
-
-                LaunchedEffect(Unit) {
-                    viewModel.achievementsEvent.filterIsInstance<RAEventUi.Reset>().collect {
-                        achievementsViewModel.onSessionReset()
-                    }
-                }
-
-                AchievementUpdatesUi(viewModel)
-
-                if (showAchievementList.value) {
-                    AchievementListDialog(
-                        viewModel = achievementsViewModel,
-                        onDismiss = {
-                            activeOverlays.removeActiveOverlay(EmulatorOverlay.ACHIEVEMENTS_DIALOG)
-                            viewModel.resumeEmulator()
-                            showAchievementList.value = false
-                        }
-                    )
-                }
-            }
-        }
+        // Achievement UI - will move to EmulationScreen
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -394,7 +344,7 @@ class EmulatorActivity : AppCompatActivity() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 connectedControllerManager.controllersState.collect {
-                    binding.viewLayoutControls.setConnectedControllersState(it)
+                    // binding.viewLayoutControls.setConnectedControllersState(it)
                     presentation?.layoutView?.setConnectedControllersState(it)
                 }
             }
@@ -425,9 +375,9 @@ class EmulatorActivity : AppCompatActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentFps.collectLatest {
                     if (it == null) {
-                        binding.textFps.text = null
+                        // binding.textFps.text = null
                     } else {
-                        binding.textFps.text = getString(R.string.info_fps, it)
+                        // binding.textFps.text = getString(R.string.info_fps, it)
                     }
                 }
             }
@@ -510,40 +460,25 @@ class EmulatorActivity : AppCompatActivity() {
                 viewModel.emulatorState.collectLatest {
                     when (it) {
                         is EmulatorState.Uninitialized -> {
-                            binding.viewLayoutControls.isInvisible = true
-                            binding.textFps.isGone = true
-                            binding.textLoading.isGone = true
+                            // binding.viewLayoutControls.isInvisible = true
                         }
                         EmulatorState.LoadingFirmware,
                         EmulatorState.LoadingRom -> {
-                            binding.viewLayoutControls.isInvisible = true
-                            binding.textFps.isGone = true
-                            binding.textLoading.isVisible = true
+                            // binding.viewLayoutControls.isInvisible = true
                         }
                         is EmulatorState.RunningRom,
                         is EmulatorState.RunningFirmware -> {
                             setupSustainedPerformanceMode()
                             setupFpsCounter()
-                            binding.textLoading.isGone = true
-                            binding.viewLayoutControls.isVisible = true
                             backPressedCallback.isEnabled = true
                         }
                         is EmulatorState.RomLoadError -> {
-                            binding.viewLayoutControls.isInvisible = true
-                            binding.textFps.isGone = true
-                            binding.textLoading.isGone = true
                             showRomLoadErrorDialog()
                         }
                         is EmulatorState.FirmwareLoadError -> {
-                            binding.viewLayoutControls.isInvisible = true
-                            binding.textFps.isGone = true
-                            binding.textLoading.isGone = true
                             showFirmwareLoadErrorDialog(it)
                         }
                         is EmulatorState.RomNotFoundError -> {
-                            binding.viewLayoutControls.isInvisible = true
-                            binding.textFps.isGone = true
-                            binding.textLoading.isGone = true
                             showRomNotFoundDialog(it.romPath)
                         }
                     }
@@ -581,9 +516,9 @@ class EmulatorActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         updateDisplays()
-        getSystemService<InputManager>()?.registerInputDeviceListener(connectedControllerManager, null)
+        displayManager.registerDisplayListener(displayListener, null)
         connectedControllerManager.startTrackingControllers()
-        frameRenderCoordinator.addSurface(binding.surfaceMain)
+        // frameRenderCoordinator.addSurface(binding.surfaceMain) - Handled in Compose
     }
 
     private fun updateDisplays() {
@@ -625,9 +560,9 @@ class EmulatorActivity : AppCompatActivity() {
 
                 updateRendererConfiguration(viewModel.runtimeRendererConfiguration.value)
                 updateBackground(viewModel.secondaryScreenBackground.value)
-                if (binding.viewLayoutControls.areScreensSwapped()) {
-                    swapScreens()
-                }
+                // if (binding.viewLayoutControls.areScreensSwapped()) {
+                //     swapScreens()
+                // }
                 if (activeOverlays.hasActiveOverlays()) {
                     setPauseOverlayVisibility(true)
                 }
@@ -698,89 +633,26 @@ class EmulatorActivity : AppCompatActivity() {
     private fun setupFpsCounter() {
         val fpsCounterPosition = viewModel.getFpsCounterPosition()
         if (fpsCounterPosition == FpsCounterPosition.HIDDEN) {
-            binding.textFps.isGone = true
+            // binding.textFps.isGone = true
         } else {
-            binding.textFps.isVisible = true
-            val newParams = ConstraintLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-            when (fpsCounterPosition) {
-                FpsCounterPosition.TOP_LEFT -> {
-                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.TOP_CENTER -> {
-                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.TOP_RIGHT -> {
-                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.BOTTOM_LEFT -> {
-                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.BOTTOM_CENTER -> {
-                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.BOTTOM_RIGHT -> {
-                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
-                }
-                FpsCounterPosition.HIDDEN -> { /* Do nothing here */ }
-            }
-            binding.textFps.layoutParams = newParams
+            // binding.textFps.isVisible = true
+            // ...
         }
     }
 
     private fun setupSoftInput(layoutConfiguration: RuntimeInputLayoutConfiguration?) {
-        if (layoutConfiguration != null) {
-            setLayoutOrientation(layoutConfiguration.layoutOrientation)
-            with(binding.viewLayoutControls) {
-                instantiateLayout(layoutConfiguration, LayoutTarget.MAIN_SCREEN)
-                setLayoutComponentToggleState(LayoutComponent.BUTTON_FAST_FORWARD_TOGGLE, frontendInputHandler.fastForwardEnabled)
-                setLayoutComponentToggleState(LayoutComponent.BUTTON_MICROPHONE_TOGGLE, frontendInputHandler.microphoneEnabled)
-            }
-            handler.post {
-                updateRendererScreenAreas()
-            }
-
-            presentation?.apply {
-                updateLayout(layoutConfiguration)
-                layoutView.setLayoutComponentToggleState(LayoutComponent.BUTTON_FAST_FORWARD_TOGGLE, frontendInputHandler.fastForwardEnabled)
-                layoutView.setLayoutComponentToggleState(LayoutComponent.BUTTON_MICROPHONE_TOGGLE, frontendInputHandler.microphoneEnabled)
-            }
-        } else {
-            binding.viewLayoutControls.destroyLayout()
-            presentation?.layoutView?.destroyLayout()
-        }
+        // Handled in Compose
     }
 
     private fun swapScreen() {
-        binding.viewLayoutControls.swapScreens()
+        // binding.viewLayoutControls.swapScreens()
         presentation?.swapScreens()
 
         updateRendererScreenAreas()
     }
 
     private fun updateRendererScreenAreas() {
-        val (topScreen, bottomScreen) = if (binding.viewLayoutControls.areScreensSwapped()) {
-            LayoutComponent.BOTTOM_SCREEN to LayoutComponent.TOP_SCREEN
-        } else {
-            LayoutComponent.TOP_SCREEN to LayoutComponent.BOTTOM_SCREEN
-        }
-        val topView = binding.viewLayoutControls.getLayoutComponentView(topScreen)
-        val bottomView = binding.viewLayoutControls.getLayoutComponentView(bottomScreen)
-        mainScreenRenderer.updateScreenAreas(
-            topView?.getRect(),
-            bottomView?.getRect(),
-            topView?.baseAlpha ?: 1f,
-            bottomView?.baseAlpha ?: 1f,
-            topView?.onTop ?: false,
-            bottomView?.onTop ?: false,
-        )
+        // Will be handled in EmulationScreen via Compose layout callbacks
     }
 
     private fun setupInputHandling(controllerConfiguration: ControllerConfiguration) {
@@ -839,7 +711,7 @@ class EmulatorActivity : AppCompatActivity() {
     }
 
     private fun isRewindWindowOpen(): Boolean {
-        return binding.root.currentState == R.id.rewind_visible
+        return false // Will be handled in Compose state
     }
 
     private fun showSaveStateSlotsDialog(slots: List<SaveStateSlot>, onSlotPicked: (SaveStateSlot) -> Unit) {
@@ -931,13 +803,13 @@ class EmulatorActivity : AppCompatActivity() {
 
     private fun showRewindWindow(rewindWindow: RewindWindow) {
         activeOverlays.addActiveOverlay(EmulatorOverlay.REWIND_WINDOW)
-        binding.root.transitionToState(R.id.rewind_visible)
+        // binding.root.transitionToState(R.id.rewind_visible)
         rewindSaveStateAdapter.setRewindWindow(rewindWindow)
     }
 
     private fun closeRewindWindow() {
         activeOverlays.removeActiveOverlay(EmulatorOverlay.REWIND_WINDOW)
-        binding.root.transitionToState(R.id.rewind_hidden)
+        // binding.root.transitionToState(R.id.rewind_hidden)
         viewModel.resumeEmulator()
     }
 
@@ -971,7 +843,7 @@ class EmulatorActivity : AppCompatActivity() {
         super.onStop()
         getSystemService<InputManager>()?.unregisterInputDeviceListener(connectedControllerManager)
         connectedControllerManager.stopTrackingControllers()
-        frameRenderCoordinator.removeSurface(binding.surfaceMain)
+        // frameRenderCoordinator.removeSurface(binding.surfaceMain) - Handled in Compose
     }
 
     override fun onDestroy() {

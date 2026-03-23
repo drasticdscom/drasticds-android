@@ -203,6 +203,13 @@ object MelonModule {
     }
 
     @Provides
+    @Singleton
+    fun provideUserPreferencesRepository(@ApplicationContext context: Context): UserPreferencesRepository {
+        return DataStoreUserPreferencesRepository(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideRomLaunchPreconditionChecker(
         configurationDirectoryVerifier: ConfigurationDirectoryVerifier,
         romFileProcessorFactory: RomFileProcessorFactory,

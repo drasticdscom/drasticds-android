@@ -114,6 +114,7 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.window)
     implementation(libs.androidx.work)
+    implementation(libs.androidx.datastore)
     implementation(libs.android.material)
     
     implementation(platform(libs.firebase.bom))

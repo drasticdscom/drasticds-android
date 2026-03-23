@@ -28,25 +28,25 @@ val LightDrasticDSColors @Composable get() = lightColors(
     primaryVariant = PrimaryDark,
     secondary = Accent,
     secondaryVariant = Accent,
-    background = Color(0xFFF1F5F9), // Lighter background for light mode
-    surface = Color(0xFFFFFFFF),
+    background = Color(0xFFF8FAFC), // Light Theme: Background #F8FAFC
+    surface = Color(0xFFFFFFFF),    // Light Theme: Surface #FFFFFF
     onPrimary = OnPrimary,
     onSecondary = OnPrimary,
-    onSurface = Color(0xFF0F172A),
-    onBackground = Color(0xFF334155),
+    onSurface = Color(0xFF0F172A),  // Light Theme: Text #0F172A
+    onBackground = Color(0xFF0F172A),
     error = ErrorCustom
 )
 
 val DarkDrasticDSColors @Composable get() = darkColors(
-    primary = PrimaryDark,
-    primaryVariant = Background,
+    primary = Primary,
+    primaryVariant = PrimaryDark,
     secondary = Accent,
     secondaryVariant = Accent,
-    background = Background,
-    surface = Surface,
+    background = Background,        // Dark Theme: Background #0F172A
+    surface = Surface,              // Dark Theme: Surface #1E293B
     onPrimary = OnPrimary,
     onSecondary = OnPrimary,
-    onSurface = OnSurface,
+    onSurface = OnSurface,          // Dark Theme: Text #CBD5E1
     onBackground = OnBackground,
     error = ErrorCustom
 )
