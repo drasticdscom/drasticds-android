@@ -338,42 +338,117 @@ App Launch
 
 ### 6.2 LibraryScreen — Home
 
-- Grid of ROM cards (2 columns portrait, 3 landscape)
-- Each RomCard shows: box art thumbnail (if available), ROM title, last played date
-- Sort options: Last Played, A–Z, Date Added
-- FAB: "Add ROM" — opens Android storage picker (SAF) filtered to .nds and .zip
-- Empty state (no ROMs loaded):
-  - App icon centred
-  - Text: "Add your DS game files to get started"
-  - Subtext: "Tap the + button to load a game file from your device"
-  - "Add ROM" button — same as FAB
-  - NO mention of where to get ROMs
-  - NO links to any website in this context
-- Banner ad at bottom — always visible on this screen
-- Search icon in top bar — filters ROM list by title
+**Layout toggle — user can switch between Grid and List:**
+- Default: Grid view — 2 columns portrait, 3 columns landscape
+- Toggle: List view — one ROM per row with more metadata visible
+- Toggle button in top bar (grid/list icon)
+- User preference persisted via DataStore
+
+**Grid view — RomCard spec:**
+- Box art thumbnail fills card top (aspect ratio 1:1)
+- No box art placeholder: generic DS cartridge icon in brand blue #38629F
+  on dark surface background — never show broken image or blank space
+- ROM title below thumbnail — max 2 lines, ellipsized
+- Last played date — small text below title
+- Rounded corners 12dp, subtle elevation shadow
+
+**List view — RomCard spec:**
+- Thumbnail on left (64x64dp), DS cartridge placeholder if no art
+- ROM title — bold, full width
+- File name and last played date below title
+- Chevron arrow on right
+
+**Top bar:**
+- Title: "DrasticDS"
+- Search icon — filters ROM list by title in real time
+- Sort icon — bottom sheet with options: Last Played, A–Z, Date Added
+- Grid/List toggle icon
+
+**Bottom navigation bar — 3 tabs:**
+- Library (home icon) — default tab
+- Settings (gear icon)
+- About (info icon)
+
+**FAB — bottom right:**
+- "+" icon
+- Opens Android SAF directory picker filtered to .nds and .zip files
+- User selects a folder — all ROMs in that folder are scanned and added
+
+**Empty state (no ROMs loaded):**
+- DrasticDS icon centred
+- Text: "Add your DS game files to get started"
+- Subtext: "Tap the + button to load a game file from your device"
+- "Add ROM" button — same action as FAB
+- NO mention of where to get ROMs
+- NO links to any website in this context
+
+**Banner ad — bottom of screen, above navigation bar**
+- Always visible on Library screen
+- Never overlaps content
+
+### 6.2a AppTheme
+
+- Follows system setting — dark or light based on phone's system theme
+- Dark theme: Background #0F172A, Surface #1E293B, text white
+- Light theme: Background #F8FAFC, Surface #FFFFFF, text #0F172A
+- Primary colour #38629F in both themes
+- DrasticDSTheme wraps entire app in MainActivity
 
 ### 6.3 EmulationScreen — Sacred Zone
 
-**This screen has zero ads of any kind. No exceptions.**
+**This screen has zero ads of any kind. No exceptions. Ever.**
 
-- Top DS screen (main display)
-- Bottom DS screen (touch screen — receives touch input)
-- On-screen controller overlay (toggleable)
-- On-screen controller layout:
+**Screen layout — user can switch between two modes:**
+
+Mode 1 — Vertical stack (portrait, like holding a real DS):
+- Top DS screen fills upper half
+- Bottom DS screen (touch) fills lower half
+- On-screen controller overlaid on bottom screen area
+
+Mode 2 — Side by side (landscape, wider view):
+- Top DS screen on left
+- Bottom DS screen on right
+- On-screen controller below or overlaid
+
+Layout switcher: button in pause menu and in-game quick settings.
+User preference persisted via DataStore.
+
+**On-screen controller — fully customisable:**
+- Default layout:
   - D-pad: bottom left
   - A/B/X/Y: bottom right
   - L/R: top left/right
   - Start/Select: bottom centre
   - Menu button: top centre (opens pause menu)
-- Pause menu (overlay):
-  - Resume
-  - Save State (slots 1–5)
-  - Load State (slots 1–5)
-  - Settings (in-game only: screen layout, controller opacity)
-  - Exit to Library
+- Opacity: slider 0–100% (default 70%)
+- Position: each button group is draggable and repositionable
+- Size: pinch to resize each button group
+- All customisations saved per-game via DataStore
+- "Reset layout" option in controller settings
+
+**Pause menu (full screen overlay):**
+- Resume
+- Save State → sub-menu with slots 1–5 (shows screenshot thumbnail + date)
+- Load State → sub-menu with slots 1–5
+- Screen Layout (switch between vertical/landscape)
+- Controller Settings (opacity, position, size)
+- Exit to Library
+
+**Technical requirements:**
 - Landscape orientation forced during emulation
-- System bars hidden (immersive mode)
-- Screen kept awake (WAKE_LOCK permission)
+- System bars hidden — immersive mode (BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE)
+- Screen kept awake — WAKE_LOCK permission
+- Back gesture disabled during emulation — must use pause menu to exit
+
+### 6.3a v1.1 Roadmap — Controller Themes
+Custom controller skin themes (like Delta emulator) are planned for v1.1.
+The controller layout system must be built with theming in mind:
+- Controller buttons rendered as composables with replaceable assets
+- Theme = a set of drawable resources + layout config JSON
+- Theme picker screen in Settings (v1.1)
+- Community theme sharing via drasticds.com (v1.2)
+Do not implement themes in Phase 2 — but architect the controller
+composables so themes can be added later without a full rewrite.
 
 ### 6.4 SettingsScreen
 
