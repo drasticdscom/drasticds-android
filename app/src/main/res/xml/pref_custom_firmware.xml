@@ -26,13 +26,13 @@
             android:entryValues="@array/console_type_values"
             android:defaultValue="ds" />
 
-    <me.magnum.melonds.ui.settings.preferences.BiosDirectoryPickerPreference
+    <com.drasticds.emulator.ui.settings.preferences.BiosDirectoryPickerPreference
             android:key="bios_dir"
             android:title="@string/bios_directory"
             app:iconSpaceReserved="false"
             app:consoleType="ds" />
 
-    <me.magnum.melonds.ui.settings.preferences.BiosDirectoryPickerPreference
+    <com.drasticds.emulator.ui.settings.preferences.BiosDirectoryPickerPreference
             android:key="dsi_bios_dir"
             android:title="@string/dsi_bios_directory"
             app:iconSpaceReserved="false"

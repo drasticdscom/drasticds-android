@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    // alias(libs.plugins.google.services)
+    // alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -21,11 +23,11 @@ android {
         }
     }
 
-    namespace = "me.magnum.melonds"
+    namespace = "com.drasticds.emulator"
     compileSdk = AppConfig.compileSdkVersion
     ndkVersion = AppConfig.ndkVersion
     defaultConfig {
-        applicationId = "me.magnum.melonds"
+        applicationId = "com.drasticds.emulator"
         minSdk = AppConfig.minSdkVersion
         targetSdk = AppConfig.targetSdkVersion
         versionCode = AppConfig.versionCode
@@ -44,6 +46,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        // buildConfig = true
     }
     buildTypes {
         getByName("release") {
@@ -52,43 +55,20 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
-            applicationIdSuffix = ".dev"
+            // buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/6300978111\"")
+            // buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+            // buildConfigField("String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3940256099942544/9257395921\"")
         }
     }
 
-    flavorDimensions.add("version")
-    flavorDimensions.add("build")
-    productFlavors {
-        create("playStore") {
-            dimension = "version"
-            versionNameSuffix = " PS"
-        }
-        create("gitHub") {
-            dimension = "version"
-            isDefault = true
-            versionNameSuffix = " GH"
-        }
 
-        create("prod") {
-            dimension = "build"
-            isDefault = true
-        }
-        create("nightly") {
-            dimension = "build"
-            applicationIdSuffix = ".nightly"
-            versionNameSuffix = " (NIGHTLY)"
-        }
-    }
     externalNativeBuild {
         cmake {
             path = file("CMakeLists.txt")
             version = "3.22.1"
         }
     }
-    sourceSets {
-        // Adds exported schema location as test app assets.
-        getByName("androidTest").assets.directories += "$projectDir/schemas"
-    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
@@ -100,15 +80,13 @@ kotlin {
         jvmTarget = JvmTarget.JVM_21
         freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
     }
+}
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
-    val gitHubImplementation by configurations
-
     implementation(projects.masterswitch)
     implementation(projects.rcheevosApi)
     implementation(projects.common)
@@ -137,6 +115,14 @@ dependencies {
     implementation(libs.androidx.window)
     implementation(libs.androidx.work)
     implementation(libs.android.material)
+    
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.messaging)
+    implementation(libs.admob)
+    implementation(libs.ump)
 
     implementation(platform(libs.compose.bom))
     implementation(libs.accompanist.systemuicontroller)
@@ -164,8 +150,8 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.xz)
 
-    gitHubImplementation(libs.retrofit)
-    gitHubImplementation(libs.retrofit.converter.kotlinx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.kotlinx)
 
     ksp(libs.hilt.compiler)
     ksp(libs.hilt.compiler.android)

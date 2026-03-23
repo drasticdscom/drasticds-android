@@ -1,4 +1,4 @@
-package me.magnum.melonds.di
+package com.drasticds.emulator.di
 
 import android.content.Context
 import dagger.Module
@@ -7,9 +7,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import me.magnum.melonds.domain.services.UpdateInstallManager
-import me.magnum.melonds.github.GitHubApi
-import me.magnum.melonds.github.services.GitHubUpdateInstallManager
+import com.drasticds.emulator.domain.services.UpdateInstallManager
+import com.drasticds.emulator.github.GitHubApi
+import com.drasticds.emulator.github.services.GitHubUpdateInstallManager
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory

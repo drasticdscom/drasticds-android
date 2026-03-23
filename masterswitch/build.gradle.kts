@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.smp.masterswitchpreference"
+    namespace = "com.drasticds.emulator.masterswitch"
     compileSdk = AppConfig.compileSdkVersion
 
     defaultConfig {

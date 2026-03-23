@@ -53,7 +53,7 @@ MelonDSAndroidCameraHandler* androidCameraHandler;
 extern "C"
 {
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_setupEmulator(JNIEnv* env, jobject thiz, jobject emulatorConfiguration, jobject cameraManager, jobject screenshotBuffer)
+Java_com_drasticds_emulator_MelonEmulator_setupEmulator(JNIEnv* env, jobject thiz, jobject emulatorConfiguration, jobject cameraManager, jobject screenshotBuffer)
 {
     MelonDSAndroid::EmulatorConfiguration finalEmulatorConfiguration = MelonDSAndroidConfiguration::buildEmulatorConfiguration(env, emulatorConfiguration);
     fastForwardSpeedMultiplier = finalEmulatorConfiguration.fastForwardSpeedMultiplier;
@@ -70,7 +70,7 @@ Java_me_magnum_melonds_MelonEmulator_setupEmulator(JNIEnv* env, jobject thiz, jo
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_setupCheats(JNIEnv* env, jobject thiz, jobjectArray cheats)
+Java_com_drasticds_emulator_MelonEmulator_setupCheats(JNIEnv* env, jobject thiz, jobjectArray cheats)
 {
     jsize cheatCount = env->GetArrayLength(cheats);
     if (cheatCount < 1) {
@@ -145,7 +145,7 @@ Java_me_magnum_melonds_MelonEmulator_setupCheats(JNIEnv* env, jobject thiz, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_setupAchievements(JNIEnv* env, jobject thiz, jobjectArray achievements, jobjectArray leaderboards, jstring richPresenceScript)
+Java_com_drasticds_emulator_MelonEmulator_setupAchievements(JNIEnv* env, jobject thiz, jobjectArray achievements, jobjectArray leaderboards, jstring richPresenceScript)
 {
     std::list<MelonDSAndroid::RetroAchievements::RAAchievement> internalAchievements;
     std::list<MelonDSAndroid::RetroAchievements::RALeaderboard> internalLeaderboards;
@@ -168,13 +168,13 @@ Java_me_magnum_melonds_MelonEmulator_setupAchievements(JNIEnv* env, jobject thiz
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_unloadRetroAchievementsData(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_unloadRetroAchievementsData(JNIEnv* env, jobject thiz)
 {
     MelonDSAndroid::unloadRetroAchievementsData();
 }
 
 JNIEXPORT jstring JNICALL
-Java_me_magnum_melonds_MelonEmulator_getRichPresenceStatus(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_getRichPresenceStatus(JNIEnv* env, jobject thiz)
 {
     std::string richPresenceString = MelonDSAndroid::getRichPresenceStatus();
     if (richPresenceString.empty())
@@ -184,9 +184,9 @@ Java_me_magnum_melonds_MelonEmulator_getRichPresenceStatus(JNIEnv* env, jobject 
 }
 
 JNIEXPORT jobjectArray JNICALL
-Java_me_magnum_melonds_MelonEmulator_getRuntimeAchievements(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_getRuntimeAchievements(JNIEnv* env, jobject thiz)
 {
-    jclass simpleRuntimeAchievementClass = env->FindClass("me/magnum/melonds/domain/model/retroachievements/RASimpleRuntimeAchievement");
+    jclass simpleRuntimeAchievementClass = env->FindClass("com/drasticds/emulator/domain/model/retroachievements/RASimpleRuntimeAchievement");
     jmethodID simpleRuntimeAchievementConstructor = env->GetMethodID(simpleRuntimeAchievementClass, "<init>", "(JII)V");
 
     auto runtimeAchievements = MelonDSAndroid::getRuntimeAchievements();
@@ -204,7 +204,7 @@ Java_me_magnum_melonds_MelonEmulator_getRuntimeAchievements(JNIEnv* env, jobject
 }
 
 JNIEXPORT jint JNICALL
-Java_me_magnum_melonds_MelonEmulator_loadRomInternal(JNIEnv* env, jobject thiz, jstring romPath, jstring sramPath, jint gbaSlotType, jstring gbaRomPath, jstring gbaSramPath)
+Java_com_drasticds_emulator_MelonEmulator_loadRomInternal(JNIEnv* env, jobject thiz, jstring romPath, jstring sramPath, jint gbaSlotType, jstring gbaRomPath, jstring gbaSramPath)
 {
     jboolean isCopy = JNI_FALSE;
     const char* rom = romPath == nullptr ? nullptr : env->GetStringUTFChars(romPath, &isCopy);
@@ -227,12 +227,12 @@ Java_me_magnum_melonds_MelonEmulator_loadRomInternal(JNIEnv* env, jobject thiz, 
 }
 
 JNIEXPORT jint JNICALL
-Java_me_magnum_melonds_MelonEmulator_bootFirmwareInternal(JNIEnv* env, jobject thiz) {
+Java_com_drasticds_emulator_MelonEmulator_bootFirmwareInternal(JNIEnv* env, jobject thiz) {
     return MelonDSAndroid::bootFirmware();
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_startEmulation(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_startEmulation(JNIEnv* env, jobject thiz)
 {
     stop = false;
     isThreadReallyPaused = false;
@@ -249,7 +249,7 @@ Java_me_magnum_melonds_MelonEmulator_startEmulation(JNIEnv* env, jobject thiz)
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_presentFrame(JNIEnv* env, jobject thiz, jlong deadlineNs, jobject renderFrameCallback)
+Java_com_drasticds_emulator_MelonEmulator_presentFrame(JNIEnv* env, jobject thiz, jlong deadlineNs, jobject renderFrameCallback)
 {
     jclass presentFrameWrapperClass = env->GetObjectClass(renderFrameCallback);
     jmethodID renderFrameMethodId = env->GetMethodID(presentFrameWrapperClass, "renderFrame", "(ZI)V");
@@ -288,13 +288,13 @@ Java_me_magnum_melonds_MelonEmulator_presentFrame(JNIEnv* env, jobject thiz, jlo
 }
 
 JNIEXPORT jfloat JNICALL
-Java_me_magnum_melonds_MelonEmulator_getFPS(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_getFPS(JNIEnv* env, jobject thiz)
 {
     return fps;
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_pauseEmulation(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_pauseEmulation(JNIEnv* env, jobject thiz)
 {
     if (started) {
         pthread_mutex_lock(&emuThreadMutex);
@@ -312,7 +312,7 @@ Java_me_magnum_melonds_MelonEmulator_pauseEmulation(JNIEnv* env, jobject thiz)
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_resumeEmulation(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_resumeEmulation(JNIEnv* env, jobject thiz)
 {
     if (started) {
         pthread_mutex_lock(&emuThreadMutex);
@@ -333,20 +333,20 @@ Java_me_magnum_melonds_MelonEmulator_resumeEmulation(JNIEnv* env, jobject thiz)
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_resetEmulation(JNIEnv* env, jobject thiz) {
+Java_com_drasticds_emulator_MelonEmulator_resetEmulation(JNIEnv* env, jobject thiz) {
     pthread_mutex_lock(&emuThreadMutex);
     if (!stop) {
         if (paused) {
             pthread_mutex_unlock(&emuThreadMutex);
         } else {
             pthread_mutex_unlock(&emuThreadMutex);
-            Java_me_magnum_melonds_MelonEmulator_pauseEmulation(env, thiz);
+            Java_com_drasticds_emulator_MelonEmulator_pauseEmulation(env, thiz);
         }
 
         // Make sure that the thread is really paused to avoid data corruption
         while (!isThreadReallyPaused);
         MelonDSAndroid::reset();
-        Java_me_magnum_melonds_MelonEmulator_resumeEmulation(env, thiz);
+        Java_com_drasticds_emulator_MelonEmulator_resumeEmulation(env, thiz);
     } else {
         // If the emulation is stopping, just ignore it
         pthread_mutex_unlock(&emuThreadMutex);
@@ -354,21 +354,21 @@ Java_me_magnum_melonds_MelonEmulator_resetEmulation(JNIEnv* env, jobject thiz) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_MelonEmulator_saveStateInternal(JNIEnv* env, jobject thiz, jstring path)
+Java_com_drasticds_emulator_MelonEmulator_saveStateInternal(JNIEnv* env, jobject thiz, jstring path)
 {
     const char* saveStatePath = path == nullptr ? nullptr : env->GetStringUTFChars(path, JNI_FALSE);
     return MelonDSAndroid::saveState(saveStatePath);
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_MelonEmulator_loadStateInternal(JNIEnv* env, jobject thiz, jstring path)
+Java_com_drasticds_emulator_MelonEmulator_loadStateInternal(JNIEnv* env, jobject thiz, jstring path)
 {
     const char* saveStatePath = path == nullptr ? nullptr : env->GetStringUTFChars(path, JNI_FALSE);
     return MelonDSAndroid::loadState(saveStatePath);
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, jobject rewindSaveState) {
+Java_com_drasticds_emulator_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, jobject rewindSaveState) {
     bool result = true;
 
     pthread_mutex_lock(&emuThreadMutex);
@@ -378,10 +378,10 @@ Java_me_magnum_melonds_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, 
             pthread_mutex_unlock(&emuThreadMutex);
         } else {
             pthread_mutex_unlock(&emuThreadMutex);
-            Java_me_magnum_melonds_MelonEmulator_pauseEmulation(env, thiz);
+            Java_com_drasticds_emulator_MelonEmulator_pauseEmulation(env, thiz);
         }
 
-        jclass rewindSaveStateClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindSaveState");
+        jclass rewindSaveStateClass = env->FindClass("com/drasticds/emulator/ui/emulator/rewind/model/RewindSaveState");
         jfieldID bufferField = env->GetFieldID(rewindSaveStateClass, "buffer", "Ljava/nio/ByteBuffer;");
         jfieldID bufferContentSizeField = env->GetFieldID(rewindSaveStateClass, "bufferContentSize", "J");
         jfieldID screenshotBufferField = env->GetFieldID(rewindSaveStateClass, "screenshotBuffer", "Ljava/nio/ByteBuffer;");
@@ -407,7 +407,7 @@ Java_me_magnum_melonds_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, 
 
         // Resume emulation if it was running
         if (!wasPaused) {
-            Java_me_magnum_melonds_MelonEmulator_resumeEmulation(env, thiz);
+            Java_com_drasticds_emulator_MelonEmulator_resumeEmulation(env, thiz);
         }
     } else {
         // If the emulation is stopping, just ignore it
@@ -418,10 +418,10 @@ Java_me_magnum_melonds_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, 
 }
 
 JNIEXPORT jobject JNICALL
-Java_me_magnum_melonds_MelonEmulator_getRewindWindow(JNIEnv* env, jobject thiz) {
+Java_com_drasticds_emulator_MelonEmulator_getRewindWindow(JNIEnv* env, jobject thiz) {
     auto currentRewindWindow = MelonDSAndroid::getRewindWindow();
 
-    jclass rewindSaveStateClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindSaveState");
+    jclass rewindSaveStateClass = env->FindClass("com/drasticds/emulator/ui/emulator/rewind/model/RewindSaveState");
     jmethodID rewindSaveStateConstructor = env->GetMethodID(rewindSaveStateClass, "<init>", "(Ljava/nio/ByteBuffer;JLjava/nio/ByteBuffer;I)V");
 
     jclass listClass = env->FindClass("java/util/ArrayList");
@@ -437,14 +437,14 @@ Java_me_magnum_melonds_MelonEmulator_getRewindWindow(JNIEnv* env, jobject thiz) 
         env->CallVoidMethod(rewindStateList, listAddMethod, index++, rewindSaveState);
     }
 
-    jclass rewindWindowClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindWindow");
+    jclass rewindWindowClass = env->FindClass("com/drasticds/emulator/ui/emulator/rewind/model/RewindWindow");
     jmethodID rewindWindowConstructor = env->GetMethodID(rewindWindowClass, "<init>", "(ILjava/util/ArrayList;)V");
     jobject rewindWindow = env->NewObject(rewindWindowClass, rewindWindowConstructor, currentRewindWindow.currentFrame, rewindStateList);
     return rewindWindow;
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_stopEmulation(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_stopEmulation(JNIEnv* env, jobject thiz)
 {
     if (started)
     {
@@ -470,31 +470,31 @@ Java_me_magnum_melonds_MelonEmulator_stopEmulation(JNIEnv* env, jobject thiz)
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_onScreenTouch(JNIEnv* env, jobject thiz, jint x, jint y)
+Java_com_drasticds_emulator_MelonEmulator_onScreenTouch(JNIEnv* env, jobject thiz, jint x, jint y)
 {
     MelonDSAndroid::touchScreen(x, y);
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_onScreenRelease(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonEmulator_onScreenRelease(JNIEnv* env, jobject thiz)
 {
     MelonDSAndroid::releaseScreen();
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_onKeyPress(JNIEnv* env, jobject thiz, jint key)
+Java_com_drasticds_emulator_MelonEmulator_onKeyPress(JNIEnv* env, jobject thiz, jint key)
 {
     MelonDSAndroid::pressKey(key);
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_onKeyRelease(JNIEnv* env, jobject thiz, jint key)
+Java_com_drasticds_emulator_MelonEmulator_onKeyRelease(JNIEnv* env, jobject thiz, jint key)
 {
     MelonDSAndroid::releaseKey(key);
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_setFastForwardEnabled(JNIEnv* env, jobject thiz, jboolean enabled)
+Java_com_drasticds_emulator_MelonEmulator_setFastForwardEnabled(JNIEnv* env, jobject thiz, jboolean enabled)
 {
     isFastForwardEnabled = enabled;
     if (enabled) {
@@ -507,7 +507,7 @@ Java_me_magnum_melonds_MelonEmulator_setFastForwardEnabled(JNIEnv* env, jobject 
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_setMicrophoneEnabled(JNIEnv* env, jobject thiz, jboolean enabled)
+Java_com_drasticds_emulator_MelonEmulator_setMicrophoneEnabled(JNIEnv* env, jobject thiz, jboolean enabled)
 {
     if (enabled)
         MelonDSAndroid::userEnableMic();
@@ -516,7 +516,7 @@ Java_me_magnum_melonds_MelonEmulator_setMicrophoneEnabled(JNIEnv* env, jobject t
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonEmulator_updateEmulatorConfiguration(JNIEnv* env, jobject thiz, jobject emulatorConfiguration)
+Java_com_drasticds_emulator_MelonEmulator_updateEmulatorConfiguration(JNIEnv* env, jobject thiz, jobject emulatorConfiguration)
 {
     MelonDSAndroid::EmulatorConfiguration newConfiguration = MelonDSAndroidConfiguration::buildEmulatorConfiguration(env, emulatorConfiguration);
 

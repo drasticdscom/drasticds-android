@@ -51,7 +51,7 @@
 
 # Prevent DTOs from being removed
 -keep,allowobfuscation class me.magnum.melonds.impl.dtos.**
--keep,allowobfuscation class me.magnum.rcheevosapi.dto.**
+-keep,allowobfuscation class com.drasticds.emulator.rcheevosapi.dto.**
 
 # Prevent Gson's TypeToken from being removed
 -keepattributes Signature

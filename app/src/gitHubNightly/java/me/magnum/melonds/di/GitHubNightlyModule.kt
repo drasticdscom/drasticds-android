@@ -1,4 +1,4 @@
-package me.magnum.melonds.di
+package com.drasticds.emulator.di
 
 import android.content.Context
 import dagger.Module
@@ -6,9 +6,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import me.magnum.melonds.domain.repositories.UpdatesRepository
-import me.magnum.melonds.github.GitHubApi
-import me.magnum.melonds.github.repositories.GitHubNightlyUpdatesRepository
+import com.drasticds.emulator.domain.repositories.UpdatesRepository
+import com.drasticds.emulator.github.GitHubApi
+import com.drasticds.emulator.github.repositories.GitHubNightlyUpdatesRepository
 import javax.inject.Singleton
 
 @Module

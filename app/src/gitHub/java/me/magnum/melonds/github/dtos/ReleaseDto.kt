@@ -1,4 +1,4 @@
-package me.magnum.melonds.github.dtos
+package com.drasticds.emulator.github.dtos
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

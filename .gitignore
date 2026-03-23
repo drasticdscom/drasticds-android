@@ -8,3 +8,9 @@
 /captures
 .externalNativeBuild
 .kotlin
+google-services.json
+app/google-services.json
+*.jks
+*.log
+*.dmg
+/app/schemas/

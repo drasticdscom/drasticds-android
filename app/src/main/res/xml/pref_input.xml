@@ -15,14 +15,14 @@
         android:summary="@string/layouts_summary"
         app:iconSpaceReserved="false" />
 
-    <me.magnum.melonds.ui.settings.preferences.SoftwareInputBehaviourPreference
+    <com.drasticds.emulator.ui.settings.preferences.SoftwareInputBehaviourPreference
         android:key="soft_input_behaviour"
         android:title="@string/soft_input_behaviour"
         android:summary="%s"
         android:entries="@array/soft_input_behaviour_options"
         android:entryValues="@array/soft_input_behaviour"
         android:defaultValue="hide_system_buttons_when_controller_connected"
-        app:fragment="me.magnum.melonds.ui.settings.fragments.SoftInputBehaviourPreferencesFragment"
+        app:fragment="com.drasticds.emulator.ui.settings.fragments.SoftInputBehaviourPreferencesFragment"
         app:iconSpaceReserved="false" />
 
     <SwitchPreference

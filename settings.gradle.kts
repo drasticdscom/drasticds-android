@@ -6,6 +6,10 @@ pluginManagement {
     }
 }
 
+
+
+rootProject.name = "drasticds-emulator"
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {

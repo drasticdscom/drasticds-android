@@ -11,7 +11,7 @@ extern "C"
 {
 
 JNIEXPORT jint JNICALL
-Java_me_magnum_melonds_impl_emulator_EmulatorMessageQueue_initMessagePipe(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_impl_emulator_EmulatorMessageQueue_initMessagePipe(JNIEnv* env, jobject thiz)
 {
     if (messagePipes[0] != -1) {
         return messagePipes[0];
@@ -30,7 +30,7 @@ Java_me_magnum_melonds_impl_emulator_EmulatorMessageQueue_initMessagePipe(JNIEnv
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_impl_emulator_EmulatorMessageQueue_closeMessagePipe(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_impl_emulator_EmulatorMessageQueue_closeMessagePipe(JNIEnv* env, jobject thiz)
 {
     if (messagePipes[0] != -1) {
         close(messagePipes[0]);

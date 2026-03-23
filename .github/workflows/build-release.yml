@@ -1,0 +1,46 @@
+name: Release Build
+on:
+  push:
+    tags: ['v*']
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: android-actions/setup-android@v3
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+      - name: Decode google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
+      - name: Write local.properties
+        run: |
+          echo "ADMOB_BANNER_ID=${{ secrets.ADMOB_BANNER_ID }}" >> local.properties
+          echo "ADMOB_INTERSTITIAL_ID=${{ secrets.ADMOB_INTERSTITIAL_ID }}" >> local.properties
+          echo "ADMOB_APP_OPEN_ID=${{ secrets.ADMOB_APP_OPEN_ID }}" >> local.properties
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Build Release APK (for APKMirror/direct)
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/build/outputs/bundle/release/*.aab
+            app/build/outputs/apk/release/*.apk
+          generate_release_notes: true

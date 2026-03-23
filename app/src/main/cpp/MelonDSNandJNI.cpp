@@ -32,7 +32,7 @@ jobject getTitleData(JNIEnv* env, u32 category, u32 titleId);
 extern "C"
 {
 JNIEXPORT jint JNICALL
-Java_me_magnum_melonds_MelonDSiNand_openNand(JNIEnv* env, jobject thiz, jobject emulatorConfiguration)
+Java_com_drasticds_emulator_MelonDSiNand_openNand(JNIEnv* env, jobject thiz, jobject emulatorConfiguration)
 {
     if (nand)
         return NAND_INIT_ERROR_ALREADY_OPEN;
@@ -66,7 +66,7 @@ Java_me_magnum_melonds_MelonDSiNand_openNand(JNIEnv* env, jobject thiz, jobject 
 }
 
 JNIEXPORT jobject JNICALL
-Java_me_magnum_melonds_MelonDSiNand_listTitles(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonDSiNand_listTitles(JNIEnv* env, jobject thiz)
 {
     const u32 category = DSI_NAND_FILE_CATEGORY;
     std::vector<u32> titleList;
@@ -89,7 +89,7 @@ Java_me_magnum_melonds_MelonDSiNand_listTitles(JNIEnv* env, jobject thiz)
 }
 
 JNIEXPORT jint JNICALL
-Java_me_magnum_melonds_MelonDSiNand_importTitle(JNIEnv* env, jobject thiz, jstring titleUri, jbyteArray tmdMetadata)
+Java_com_drasticds_emulator_MelonDSiNand_importTitle(JNIEnv* env, jobject thiz, jstring titleUri, jbyteArray tmdMetadata)
 {
     if (!nand)
         return TITLE_IMPORT_NAND_NOT_OPEN;
@@ -142,14 +142,14 @@ Java_me_magnum_melonds_MelonDSiNand_importTitle(JNIEnv* env, jobject thiz, jstri
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonDSiNand_deleteTitle(JNIEnv* env, jobject thiz, jint titleId)
+Java_com_drasticds_emulator_MelonDSiNand_deleteTitle(JNIEnv* env, jobject thiz, jint titleId)
 {
     if (nand)
         nandMount->DeleteTitle(DSI_NAND_FILE_CATEGORY, (u32) titleId);
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_MelonDSiNand_importTitleFile(JNIEnv* env, jobject thiz, jint titleId, jint fileType, jstring fileUri)
+Java_com_drasticds_emulator_MelonDSiNand_importTitleFile(JNIEnv* env, jobject thiz, jint titleId, jint fileType, jstring fileUri)
 {
     jboolean isFilePathCopy;
     const char* filePath = env->GetStringUTFChars(fileUri, &isFilePathCopy);
@@ -163,7 +163,7 @@ Java_me_magnum_melonds_MelonDSiNand_importTitleFile(JNIEnv* env, jobject thiz, j
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_MelonDSiNand_exportTitleFile(JNIEnv* env, jobject thiz, jint titleId, jint fileType, jstring fileUri)
+Java_com_drasticds_emulator_MelonDSiNand_exportTitleFile(JNIEnv* env, jobject thiz, jint titleId, jint fileType, jstring fileUri)
 {
     jboolean isFilePathCopy;
     const char* filePath = env->GetStringUTFChars(fileUri, &isFilePathCopy);
@@ -177,7 +177,7 @@ Java_me_magnum_melonds_MelonDSiNand_exportTitleFile(JNIEnv* env, jobject thiz, j
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonDSiNand_closeNand(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonDSiNand_closeNand(JNIEnv* env, jobject thiz)
 {
     if (!nand)
         return;
@@ -202,7 +202,7 @@ jobject getTitleData(JNIEnv* env, u32 category, u32 titleId)
     memcpy(iconArrayElements, iconData, sizeof(iconData));
     env->ReleaseByteArrayElements(iconBytes, iconArrayElements, 0);
 
-    jclass dsiWareTitleClass = env->FindClass("me/magnum/melonds/domain/model/DSiWareTitle");
+    jclass dsiWareTitleClass = env->FindClass("com/drasticds/emulator/domain/model/DSiWareTitle");
     jmethodID dsiWareTitleConstructor = env->GetMethodID(dsiWareTitleClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;J[BJJI)V");
 
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;

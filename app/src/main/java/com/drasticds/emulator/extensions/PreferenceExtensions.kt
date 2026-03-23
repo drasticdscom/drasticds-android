@@ -1,0 +1,27 @@
+package com.drasticds.emulator.extensions
+
+import androidx.preference.Preference
+import com.drasticds.emulator.utils.CompositeOnPreferenceChangeListener
+
+fun Preference.addOnPreferenceChangeListener(listener: Preference.OnPreferenceChangeListener) {
+    val currentListener = onPreferenceChangeListener
+    if (currentListener is CompositeOnPreferenceChangeListener) {
+        currentListener.addOnPreferenceChangeListener(listener)
+    } else {
+        onPreferenceChangeListener = CompositeOnPreferenceChangeListener().apply {
+            if (currentListener != null) {
+                addOnPreferenceChangeListener(currentListener)
+            }
+            addOnPreferenceChangeListener(listener)
+        }
+    }
+}
+
+fun Preference.removeOnPreferenceChangeListener(listener: Preference.OnPreferenceChangeListener) {
+    val currentListener = onPreferenceChangeListener
+    if (currentListener is CompositeOnPreferenceChangeListener) {
+        currentListener.removeOnPreferenceChangeListener(listener)
+    } else if (currentListener === listener) {
+        onPreferenceChangeListener = null
+    }
+}

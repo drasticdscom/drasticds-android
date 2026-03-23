@@ -55,7 +55,7 @@
             android:entryValues="@array/dsi_camera_source_values"
             android:defaultValue="physical_cameras" />
 
-    <me.magnum.melonds.ui.settings.preferences.StoragePickerPreference
+    <com.drasticds.emulator.ui.settings.preferences.StoragePickerPreference
             android:key="dsi_camera_static_image"
             android:title="@string/dsi_camera_image"
             android:dependency="dsi_camera_source"

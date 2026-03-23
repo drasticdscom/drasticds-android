@@ -28,7 +28,7 @@
     </queries>
 
     <application
-        android:name=".MelonDSApplication"
+        android:name=".DrasticDSEmulatorApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,6 +38,9 @@
         android:enableOnBackInvokedCallback="true"
         android:isGame="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9926768497269901~4115767842"/>
 
         <meta-data
             android:name="android.game_mode_config"
@@ -83,7 +86,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.magnum.melonds.ui.romlist.RomListActivity"/>
+                android:value="com.drasticds.emulator.ui.romlist.RomListActivity"/>
         </activity>
         <activity
             android:name=".ui.inputsetup.InputSetupActivity"
@@ -154,11 +157,11 @@
             tools:node="merge">
 
             <meta-data
-                    android:name="me.magnum.melonds.initializer.AppForegroundStateTrackerInitializer"
+                    android:name="com.drasticds.emulator.initializer.AppForegroundStateTrackerInitializer"
                     android:value="androidx.startup" />
 
             <meta-data
-                android:name="me.magnum.melonds.initializer.CoilInitializer"
+                android:name="com.drasticds.emulator.initializer.CoilInitializer"
                 android:value="androidx.startup" />
 
             <meta-data

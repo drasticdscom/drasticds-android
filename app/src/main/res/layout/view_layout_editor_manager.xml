@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@null" />
 
-    <me.magnum.melonds.ui.layouteditor.LayoutEditorView
+    <com.drasticds.emulator.ui.layouteditor.LayoutEditorView
         android:id="@+id/view_layout_editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

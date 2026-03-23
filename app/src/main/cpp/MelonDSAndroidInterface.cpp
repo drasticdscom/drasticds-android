@@ -12,7 +12,7 @@ UriFileHandler* fileHandler;
 extern "C"
 {
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonDSAndroidInterface_setup(JNIEnv* env, jobject thiz, jobject uriFileHandler)
+Java_com_drasticds_emulator_MelonDSAndroidInterface_setup(JNIEnv* env, jobject thiz, jobject uriFileHandler)
 {
     env->GetJavaVM(&vm);
     jniEnvHandler = new JniEnvHandler(vm);
@@ -27,13 +27,13 @@ Java_me_magnum_melonds_MelonDSAndroidInterface_setup(JNIEnv* env, jobject thiz, 
 }
 
 JNIEXPORT jlong JNICALL
-Java_me_magnum_melonds_MelonDSAndroidInterface_getEmulatorGlContext(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonDSAndroidInterface_getEmulatorGlContext(JNIEnv* env, jobject thiz)
 {
     return (jlong) MelonDSAndroid::openGlContext->GetContext();
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_MelonDSAndroidInterface_cleanup(JNIEnv* env, jobject thiz)
+Java_com_drasticds_emulator_MelonDSAndroidInterface_cleanup(JNIEnv* env, jobject thiz)
 {
     env->DeleteGlobalRef(androidUriFileHandler);
     androidUriFileHandler = nullptr;

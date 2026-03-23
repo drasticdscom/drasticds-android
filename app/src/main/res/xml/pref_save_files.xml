@@ -10,7 +10,7 @@
             android:defaultValue="true"
             android:disableDependentsState="true" />
 
-    <me.magnum.melonds.ui.settings.preferences.StoragePickerPreference
+    <com.drasticds.emulator.ui.settings.preferences.StoragePickerPreference
             android:key="sram_dir"
             android:title="@string/save_file_directory"
             android:dependency="use_rom_dir"

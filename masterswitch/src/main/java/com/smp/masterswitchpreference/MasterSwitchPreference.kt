@@ -8,6 +8,7 @@ import androidx.annotation.Keep
 import androidx.core.os.BundleCompat
 import androidx.core.os.ParcelCompat
 import androidx.preference.Preference
+import com.drasticds.emulator.masterswitch.R
 import java.io.File
 
 @Keep

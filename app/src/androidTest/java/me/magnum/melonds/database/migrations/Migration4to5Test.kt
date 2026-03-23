@@ -1,11 +1,11 @@
-package me.magnum.melonds.database.migrations
+package com.drasticds.emulator.database.migrations
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import me.magnum.melonds.database.MelonDatabase
+import com.drasticds.emulator.database.MelonDatabase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

@@ -25,7 +25,7 @@
             android:key="enable_rewind"
             android:title="@string/rewind"
             app:iconSpaceReserved="false"
-            android:fragment="me.magnum.melonds.ui.settings.fragments.RewindPreferencesFragment"
+            android:fragment="com.drasticds.emulator.ui.settings.fragments.RewindPreferencesFragment"
             android:defaultValue="false"
             app:ms_switchOnText="@string/on"
             app:ms_switchOffText="@string/off"

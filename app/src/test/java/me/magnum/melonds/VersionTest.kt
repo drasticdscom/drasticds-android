@@ -1,6 +1,6 @@
-package me.magnum.melonds
+package com.drasticds.emulator
 
-import me.magnum.melonds.domain.model.Version
+import com.drasticds.emulator.domain.model.Version
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test

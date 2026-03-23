@@ -1,4 +1,4 @@
-package me.magnum.melonds.github
+package com.drasticds.emulator.github
 
 const val APK_CONTENT_TYPE = "application/vnd.android.package-archive"
 

@@ -1,4 +1,4 @@
-package me.magnum.melonds.common.providers
+package com.drasticds.emulator.common.providers
 
 import android.content.ContentProvider
 import android.content.ContentValues

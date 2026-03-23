@@ -5,7 +5,7 @@ extern "C"
 {
 
 JNIEXPORT jlong JNICALL
-Java_me_magnum_melonds_ui_emulator_render_GlContext_createContext(JNIEnv* env, jobject thiz, jlong display, jlong config, jlong sharedGlContext)
+Java_com_drasticds_emulator_ui_emulator_render_GlContext_createContext(JNIEnv* env, jobject thiz, jlong display, jlong config, jlong sharedGlContext)
 {
     auto eglDisplay = reinterpret_cast<EGLDisplay>(display);
     auto eglConfig = reinterpret_cast<EGLConfig>(config);
@@ -19,7 +19,7 @@ Java_me_magnum_melonds_ui_emulator_render_GlContext_createContext(JNIEnv* env, j
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_ui_emulator_render_GlContext_makeCurrent(JNIEnv* env, jobject thiz, jlong display, jlong surface, jlong context)
+Java_com_drasticds_emulator_ui_emulator_render_GlContext_makeCurrent(JNIEnv* env, jobject thiz, jlong display, jlong surface, jlong context)
 {
     auto eglDisplay = reinterpret_cast<EGLDisplay>(display);
     auto eglSurface = reinterpret_cast<EGLSurface>(surface);
@@ -29,7 +29,7 @@ Java_me_magnum_melonds_ui_emulator_render_GlContext_makeCurrent(JNIEnv* env, job
 }
 
 JNIEXPORT void JNICALL
-Java_me_magnum_melonds_ui_emulator_render_GlContext_destroyContext(JNIEnv* env, jobject thiz, jlong display, jlong context)
+Java_com_drasticds_emulator_ui_emulator_render_GlContext_destroyContext(JNIEnv* env, jobject thiz, jlong display, jlong context)
 {
     auto eglDisplay = reinterpret_cast<EGLDisplay>(display);
     auto eglContext = reinterpret_cast<EGLContext>(context);

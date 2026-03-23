@@ -1,4 +1,4 @@
-package me.magnum.melonds.github.services
+package com.drasticds.emulator.github.services
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
@@ -14,10 +14,10 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
-import me.magnum.melonds.common.providers.UpdateContentProvider
-import me.magnum.melonds.domain.model.DownloadProgress
-import me.magnum.melonds.domain.model.appupdate.AppUpdate
-import me.magnum.melonds.domain.services.UpdateInstallManager
+import com.drasticds.emulator.common.providers.UpdateContentProvider
+import com.drasticds.emulator.domain.model.DownloadProgress
+import com.drasticds.emulator.domain.model.appupdate.AppUpdate
+import com.drasticds.emulator.domain.services.UpdateInstallManager
 import java.io.File
 
 class GitHubUpdateInstallManager(private val context: Context) : UpdateInstallManager {

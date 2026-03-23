@@ -1,17 +1,17 @@
-package me.magnum.melonds.github.repositories
+package com.drasticds.emulator.github.repositories
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.core.net.toUri
-import me.magnum.melonds.common.suspendMapCatching
-import me.magnum.melonds.common.suspendRunCatching
-import me.magnum.melonds.domain.model.Version
-import me.magnum.melonds.domain.model.appupdate.AppUpdate
-import me.magnum.melonds.domain.repositories.UpdatesRepository
-import me.magnum.melonds.github.APK_CONTENT_TYPE
-import me.magnum.melonds.github.GitHubApi
-import me.magnum.melonds.github.PREF_KEY_GITHUB_CHECK_FOR_UPDATES
-import me.magnum.melonds.github.dtos.ReleaseDto
+import com.drasticds.emulator.common.suspendMapCatching
+import com.drasticds.emulator.common.suspendRunCatching
+import com.drasticds.emulator.domain.model.Version
+import com.drasticds.emulator.domain.model.appupdate.AppUpdate
+import com.drasticds.emulator.domain.repositories.UpdatesRepository
+import com.drasticds.emulator.github.APK_CONTENT_TYPE
+import com.drasticds.emulator.github.GitHubApi
+import com.drasticds.emulator.github.PREF_KEY_GITHUB_CHECK_FOR_UPDATES
+import com.drasticds.emulator.github.dtos.ReleaseDto
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
